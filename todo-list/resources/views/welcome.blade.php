@@ -9,8 +9,10 @@
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="{{ asset('js/app.js') }}" defer></script>
 
     <!-- Styles -->
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
         /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
         html {
@@ -402,14 +404,6 @@
             font-family: 'Nunito', sans-serif;
         }
 
-        .main {
-            color: white;
-        }
-
-        .main input {
-            display: block;
-        }
-
         .flex {
             align-items: center;
         }
@@ -417,32 +411,34 @@
 </head>
 
 <body class="antialiased">
-    <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center py-4 sm:pt-0">
-        <div class="main">
-            <h1>To-do List</h1>
+    <div
+        class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center py-4 sm:pt-0">
+        <div class="main w-50">
+            <h1 class="text-gray-200">To-do List</h1>
 
+            @foreach ($listItems as $listItem)
+                <div class="card mb-2 p-2">
+                    <h4 class="card-title">Do zrobienia {{ $listItem->id }}</h4>
+                    <h5 class="card-text text-gray-700">{{ $listItem->name }}</h5>
 
-            @foreach($listItems as $listItem)
+                    <form action="{{ route('markComplete', $listItem->id) }}" method="post" accept-charset="UTF-8">
+                        {{ csrf_field() }}
+                        <button type="submit" class="btn btn-outline-primary float-end">Mark Complete</button>
+                    </form>
+                </div>
+            @endforeach
             
-            <div class="flex">
-                <p>Item: {{ $listItem->name}}</p>
-                <form action="{{ route('markComplete', $listItem->id) }}" method="post" accept-charset="UTF-8">
+            <div class="card mb-2 p-2" >
+                <form action="{{ route('saveItem') }}" method="post" accept-charset="UTF-8">
                     {{ csrf_field() }}
-                    <button type="submit" style="margin-left:20px;">Mark Complete</button>
+                    <div class="form-floating">
+                    <label for="listItem" class="text-gray-700 card-title">New To-do Item</label>
+                    <input type="text" class="d-block form-control" style="height:9vh; min-height:50px;" name="listItem">
+                </div>
+                    <button type="submit" class="btn btn-outline-success mt-2 float-end">Save Item</button>
                 </form>
             </div>
-            @endforeach
-            <form action="{{ route('saveItem') }}" method="post" accept-charset="UTF-8">
-                {{ csrf_field() }}
-                <label for="listItem">New To-do Item</label>
-                <input type="text" name="listItem">
-                <button type="submit">Save Item</button>
-
-            </form>
-
         </div>
-
-
     </div>
 </body>
 
